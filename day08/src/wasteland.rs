@@ -16,7 +16,11 @@ pub mod wasteland {
     }
 
     impl Walker {
-        pub fn new(start_node: String, map: HashMap<String, (String, String)>, dirs: String) -> Walker {
+        pub fn new(
+            start_node: String,
+            map: HashMap<String, (String, String)>,
+            dirs: String,
+        ) -> Walker {
             return Walker {
                 steps: 0,
                 akt_node: start_node,
@@ -24,17 +28,16 @@ pub mod wasteland {
                 directions: Box::new(Direction::new_vec(dirs)),
             };
         }
-        
+
         pub fn walk_a_step(&mut self) -> Walker {
             let direction = self.directions.pop_front().unwrap();
             self.steps += 1;
             let tuple: (String, String) = self.node_map.get(&self.akt_node).unwrap().clone();
-            self.akt_node = 
-                match direction {
-                    Direction::Left => tuple.0,
-                    Direction::Right => tuple.1,
-                    Direction::No_direction => String::from("AAA"),
-                };
+            self.akt_node = match direction {
+                Direction::Left => tuple.0,
+                Direction::Right => tuple.1,
+                Direction::No_direction => String::from("AAA"),
+            };
 
             self.directions.push_back(direction);
             return Walker {
@@ -48,7 +51,7 @@ pub mod wasteland {
         pub fn walk_to_destination(&mut self) -> usize {
             let mut iter = self.directions.iter();
 
-            while self.akt_node != String::from("ZZZ") {
+            while self.akt_node.chars().last().unwrap() != 'Z' {
                 self.steps += 1;
                 let next_move = match iter.next() {
                     Some(x) => x,
@@ -64,7 +67,8 @@ pub mod wasteland {
                     Direction::No_direction => String::from("AAA"),
                 };
             }
-
+            println!("Reached {}", self.akt_node);
+            
             return self.steps;
         }
     }
